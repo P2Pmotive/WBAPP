@@ -1,0 +1,156 @@
+_schema-version: "3.1"
+ID: WBApp
+description: A simple CAP project.
+version: 1.0.0
+modules:
+  - name: WBApp-srv
+    type: nodejs
+    path: gen/srv
+    requires:
+      - name: WBApp-registry
+      - name: WBApp-db
+      - name: uaa_WBApp
+      - name: WBApp-destination-service
+      - name: app-api
+        properties:
+          APP_PROTOCOL: ~{app-protocol}
+          APP_URI: ~{app-uri}
+    provides:
+      - name: srv-api
+        properties:
+          srv-url: ${default-url}
+      - name: mtx-api # potentially required by approuter
+        properties:
+          mtx-url: ${default-url}
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm-ci
+
+  - name: wbapp-approuter
+    type: approuter.nodejs
+    path: wbapp-approuter
+    requires:
+      - name: WBApp_html_repo_runtime
+      - name: srv-api
+        group: destinations
+        properties:
+          forwardAuthToken: true
+          name: srv-api
+          url: ~{srv-url}
+      - name: uaa_WBApp
+      - name: WBApp-destination-service
+        group: destinations
+        properties:
+          forwardAuthToken: false
+          name: ui5
+          url: https://ui5.sap.com
+    parameters:
+      disk-quota: 256M
+      memory: 256M
+      routes:
+       - route: 'https://${subdomain}-${space}.${default-domain}'
+
+    provides:
+      - name: app-api
+        properties:
+          app-protocol: ${protocol}
+          app-uri: ${default-uri}
+    properties:
+      TENANT_HOST_PATTERN: '^(.*)-${space}.${default-domain}'
+      # TENANT_HOST_PATTERN: '^(.*)-${default-uri}'
+
+  - name: WBApp_ui_deployer
+    type: com.sap.application.content
+    path: .
+    requires:
+      - name: WBApp_html_repo_host
+        parameters:
+          content-target: true
+    build-parameters:
+      build-result: resources
+      requires:
+        - artifacts:
+            - wbui.zip
+          name: wbui
+          target-path: resources/
+  - name: wbui
+    type: html5
+    path: app/wbui
+    build-parameters:
+      build-result: dist
+      builder: custom
+      commands:
+        - npm install
+        - npm run build:cf
+      supported-platforms:
+        []
+resources:
+  - name: WBApp_html_repo_runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime
+  - name: uaa_WBApp
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-name: WBApp-xsuaa-service
+      service-plan: application
+  - name: WBApp_html_repo_host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+  - name: WBApp-destination-service
+    type: org.cloudfoundry.managed-service
+    parameters:
+      config:
+        HTML5Runtime_enabled: false
+        init_data:
+          instance:
+            destinations:
+              - Authentication: NoAuthentication
+                Name: ui5
+                ProxyType: Internet
+                Type: HTTP
+                URL: https://ui5.sap.com
+            existing_destinations_policy: update
+        version: 1.0.0
+      service: destination
+      service-name: WBApp-destination-service
+      service-plan: lite
+  - name: WBApp-registry
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: mtx-api
+    parameters:
+      service: saas-registry
+      service-plan: application
+      config:
+        xsappname: wbapp
+        appName: WeighBridgeApp
+        displayName: WBApp
+        description: WeighBridgeApp
+        category: 'MultiTenant'
+        appUrls:
+          getDependencies: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/dependencies
+          onSubscription: ~{mtx-api/mtx-url}/-/cds/saas-provisioning/tenant/{tenantId}
+          onSubscriptionAsync: false
+          onUnSubscriptionAsync: false
+          callbackTimeoutMillis: 300000
+  - name: WBApp-db
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: service-manager
+      service-plan: container
+parameters:
+  deploy_mode: html5-repo
+  enable-parallel-deployments: true
+  subdomain: a370c3d2trial
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx -p @sap/cds-dk cds build --production

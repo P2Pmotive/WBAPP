@@ -1,0 +1,170 @@
+{
+  "_version": "1.49.0",
+  "sap.app": {
+    "id": "wbui",
+    "type": "application",
+    "i18n": "i18n/i18n.properties",
+    "applicationVersion": {
+      "version": "0.0.1"
+    },
+    "title": "{{appTitle}}",
+    "description": "{{appDescription}}",
+    "resources": "resources.json",
+    "sourceTemplate": {
+      "id": "@sap/generator-fiori:basic",
+      "version": "1.9.2",
+      "toolsId": "47a462ac-47c3-4f21-8a9a-04c4e1986e9e"
+    },
+    "dataSources": {
+      "mainService": {
+        "uri": "/WeightService/",
+        "type": "OData",
+        "settings": {
+          "annotations": [],
+          "localUri": "localService/metadata.xml",
+          "odataVersion": "4.0"
+        }
+      },
+      "mainService_1": {
+        "uri": "/v2/WeightService/",
+        "type": "OData",
+        "settings": {
+            "annotations": [],
+            "localUri": "localService/metadata.xml",
+            "odataVersion": "2.0"
+        }
+    }, 
+    "S4mainService": {
+      "uri": "/sap/opu/odata/sap/ZPURCHASEITEMS_SRV/",
+      "type": "OData",
+      "settings": {
+          "annotations": [],
+          "odataVersion": "2.0"
+      }
+  }
+    }
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "icons": {
+      "icon": "",
+      "favIcon": "",
+      "phone": "",
+      "phone@2": "",
+      "tablet": "",
+      "tablet@2": ""
+    },
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "flexEnabled": true,
+    "dependencies": {
+      "minUI5Version": "1.111.1",
+      "libs": {
+        "sap.m": {},
+        "sap.ui.core": {},
+        "sap.f": {},
+        "sap.suite.ui.generic.template": {},
+        "sap.ui.comp": {},
+        "sap.ui.generic.app": {},
+        "sap.ui.table": {},
+        "sap.ushell": {}
+      }
+    },
+    "contentDensities": {
+      "compact": true,
+      "cozy": true
+    },
+    "models": {
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "settings": {
+          "bundleName": "wbui.i18n.i18n"
+        }
+      },
+      "hanaModel": {
+        "dataSource": "mainService_1",
+        "preload": true,
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "": {
+        "dataSource": "S4mainService",
+        "preload": true,
+        "settings": {
+            "useBatch": false
+        }
+      }
+    },
+    "resources": {
+      "css": [
+        {
+          "uri": "css/style.css"
+        }
+      ]
+    },
+    "routing": {
+      "config": {
+          "viewType": "XML",
+          "viewPath": "wbui.view",
+          "controlId": "layout",
+          "controlAggregation": "beginColumnPages",
+          "bypassed": {
+              "target": [
+                  "notFound"
+              ]
+          },
+          "async": true,
+          "path": "wbui.view"
+      },
+      "routes": [
+          {
+              "pattern": "",
+              "name": "list",
+              "target": "list"
+          },
+          {
+              "pattern": "POHeaders/{objectId}",
+              "name": "object",
+              "target": "object"
+          }
+      ],
+      "targets": {
+          "list": {
+              "viewName": "List",
+              "viewLevel": 1,
+              "viewId": "list"
+          },
+          "object": {
+              "viewName": "Detail",
+              "viewId": "detail",
+              "viewLevel": 1,
+              "controlAggregation": "midColumnPages"
+          },
+          "detailObjectNotFound": {
+              "viewName": "DetailObjectNotFound",
+              "viewId": "detailObjectNotFound",
+              "controlAggregation": "midColumnPages"
+          },
+          "notFound": {
+              "viewName": "NotFound",
+              "viewId": "notFound"
+          }
+      }
+  },
+    "rootView": {
+      "viewName": "wbui.view.App",
+      "type": "XML",
+      "async": true,
+      "id": "App"
+    }
+  }
+}

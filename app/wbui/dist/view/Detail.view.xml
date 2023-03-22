@@ -1,0 +1,198 @@
+<mvc:View
+    controllerName="wbui.controller.Detail"
+    xmlns="sap.m"
+    xmlns:semantic="sap.f.semantic"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:form="sap.ui.layout.form">
+
+       <semantic:SemanticPage id="detailPage" busy="{detailView>/busy}" busyIndicatorDelay="{detailView>/delay}" showFooter="false">
+        <semantic:titleHeading>
+            <Title id="semPageTitle" text="{detailModel>/PurchaseOrder}" level="H2" />
+        </semantic:titleHeading>
+        <semantic:headerContent>
+            <!-- <ObjectAttribute id="semAtrribute" title="{i18n>priceTitle}" /> -->
+            <ObjectNumber id="semObjectNum" />
+           <HBox>
+           <Label text="Supplier: "/>
+            <Label text="  {detailModel>/SupplierName}({detailModel>/Supplier}) " id="suppl_code" class="head2" />
+            </HBox>
+            <!-- <Label text=" " id="sys_date" class="head2"/> -->
+        </semantic:headerContent>
+        <semantic:content>
+            <Panel id="idWeight">
+                <headerToolbar>
+                    <OverflowToolbar id="idTWeight">
+                        <Title id="idwTitle" text="Weight Details" />
+                        <ToolbarSpacer id="idTS" />
+                        <Button id="idFGW" text="GrossWeight" press="handleGrossWt" />
+                        <Button id="idFTW" text="TareWeight" press="handleTareWt" />
+                        <Button id="idWD" icon="sap-icon://save" tooltip="Save Weight Details" press="handleSaveWeight" enabled="true"/>
+                    </OverflowToolbar>
+                </headerToolbar>
+                <content>
+                    <FlexBox id="idFlex">
+                        <VBox>
+                            <Label text="GrossWeight:" />
+                            <Text id="idGW" text="{detailModel>/Items/results/0/Grossweight}" />
+                            <layoutData>
+                                <FlexItemData growFactor="1" />
+                            </layoutData>
+                        </VBox>
+                        <!-- <VBox>
+                            <Label text="GrossWeightTime:" />
+                            <Text id="idGWT" text="{detailModel>/Items/results/0/Grossweight}" />
+                            <layoutData>
+                                <FlexItemData growFactor="1" />
+                            </layoutData>
+                        </VBox> -->
+                        <VBox>
+                            <Label text="TareWeight:" />
+                            <Text id="idTW" text="{detailModel>/Items/results/0/Tareweight}" />
+                            <layoutData>
+                                <FlexItemData growFactor="1" />
+                            </layoutData>
+                        </VBox>
+                        <!-- <VBox>
+                            <Label text="TareWeightTime:" />
+                            <Text id="idTWT" text="{detailModel>/Items/results/0/Tareweight}" />
+                            <layoutData>
+                                <FlexItemData growFactor="1" />
+                            </layoutData>
+                        </VBox> -->
+                        <VBox>
+                            <Label text="NetWeight:" />
+                            <Text id="idNW" text="{detailModel>/Items/results/0/Netweight}"/>
+                            <layoutData>
+                                <FlexItemData growFactor="1" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="UOM:" />
+                            <Text id="idU" text="{detailModel>/Items/results/0/Unitofmeasure}" />
+                            <layoutData>
+                                <FlexItemData growFactor="1" />
+                            </layoutData>
+                        </VBox>
+                        <VBox>
+                            <Label text="Vehicle:" />
+                            <Input id="idVehicle" value="{detailModel>/Items/results/0/VehicalNo}" />
+                            <layoutData>
+                                <FlexItemData growFactor="1" />
+                            </layoutData>
+                        </VBox>
+                    </FlexBox>
+                    <Table id="lineItemsList" width="auto" items="{detailModel>/Items/results}" noDataText="{i18n>detailLineItemTableNoDataText}">
+                        <headerToolbar>
+                            <Toolbar id="tabToolBar">
+                                <Title id="lineItemsTitle" text="{detailModel>/lineItemListTitle}" titleStyle="H3" level="H3" />
+                            </Toolbar>
+                        </headerToolbar>
+                        <columns>
+                            <Column id="col1" >
+                                <Text id="colText2" text="Item No" />
+                            </Column>
+                            <Column id="col3" width="30%">
+                                <Text id="colText3" text="Material" />
+                            </Column>
+                            <!-- <Column id="col4" width="25%">
+                                <Text id="colText4" text="Material Description" />
+                            </Column> -->
+                            <Column id="col5" width="30%">
+                                <Text id="colText6" text="Plant" />
+                            </Column>
+                            <!-- <Column id="col6" width="25%">
+                                <Text id="colText7" text="Plant Description" />
+                            </Column> -->
+                            <Column id="col7">
+                                <Text id="colText8" text="Quantity" />
+                            </Column>
+                            <Column id="col8">
+                                <Text id="colText9" text="Net Amount" />
+                            </Column>
+                        </columns>
+                        <items>
+                            <ColumnListItem id="listItem">
+                                <!--  colListItem -->
+                                <cells>
+                                    <ObjectIdentifier
+                                        title="{path : 'detailModel>PurchaseOrderItem', 
+                                        type : 'sap.ui.model.odata.type.String', 
+                                        constraints: { 
+                                            isDigitSequence : true,
+                                            maxLength : 4
+                                        }
+                                        }"
+                                    />
+                                    <ObjectIdentifier title="{detailModel>MaterialName}" text="{detailModel>Material}"/>
+                                    <!-- <Text text="{parts:['detailModel>Material', 'detailModel>MaterialName'], formatter:'.formatter.materialDescription'}" /> -->
+                                    <!-- <Text text="{detailModel>MaterialName}"/> -->
+                                    <ObjectIdentifier title="{detailModel>PlantName}" text="{detailModel>Plant}"/>
+                                    <!-- <Text text="{detailModel>Plant}"/>
+                                    <Text text="{detailModel>PlantName}"/>                                   -->
+                                    <Text text="{detailModel>PurgDocItemQuantity} {detailModel>PurgDocItemQuantityUnit}"/>
+                                    <Text text="{detailModel>PurchaseOrderItemNetAmount}{detailModel>Currency}"/>
+                                </cells>
+                            </ColumnListItem>
+                        </items>
+                    </Table>
+                </content>
+            </Panel>
+        </semantic:content>
+
+        <!-- <semantic:positiveAction>
+            <semantic:PositiveAction text="Save" press="onSavePress" />
+        </semantic:positiveAction>
+        <semantic:negativeAction>
+            <semantic:NegativeAction text="Cancel" press="onSemanticButtonPress" />
+        </semantic:negativeAction> -->
+        <!--Semantic ShareMenu Buttons-->
+        <!-- <semantic:sendEmailAction>
+            <semantic:SendEmailAction id="shareEmail" press=".onSendEmailPress" />
+        </semantic:sendEmailAction>
+
+        <semantic:closeAction>
+            <semantic:CloseAction id="closeColumn" press=".onCloseDetailPress" />
+        </semantic:closeAction> -->
+
+        <!-- <semantic:footerCustomActions>
+            <Button text = 'Save'/>
+        </semantic:footerCustomActions> -->
+
+        <!-- <semantic:fullScreenAction>
+            <semantic:FullScreenAction id="enterFullScreen" visible="{= !${device>/system/phone} &amp;&amp; !${appView>/actionButtonsInfo/midColumn/fullScreen}}" press=".toggleFullScreen" />
+        </semantic:fullScreenAction>
+        <semantic:exitFullScreenAction>
+            <semantic:ExitFullScreenAction id="exitFullScreen" visible="{= !${device>/system/phone} &amp;&amp; ${appView>/actionButtonsInfo/midColumn/fullScreen}}" press=".toggleFullScreen" />
+        </semantic:exitFullScreenAction> -->
+
+        <!-- <OverflowToolbar id="oftoolbar">
+		<Button text="Accept" type="Accept"/>
+		<ToolbarSpacer/>
+		<CheckBox text="CheckBox"/>
+		<ToolbarSpacer/>
+		<Input ariaLabelledBy="text1" width="100px" value="Input"/>
+		<ToolbarSpacer/>
+		<RadioButton text="RadioButton"/>
+		<ToolbarSpacer/>
+		<Button text="Reject" type="Reject"/>
+	</OverflowToolbar> -->
+        <!-- <footer>
+			<OverflowToolbar>
+				<ToolbarSpacer/>
+				<Button type="Accept" text="Save"/>
+				<Button type="Reject" text="Cancel"/>
+			</OverflowToolbar>
+		</footer> -->
+        <!-- <semantic:footerMainAction> -->
+            <!-- <semantic:Button
+  id="about"
+  visible="true"
+  text="About"
+  enabled="true"
+  icon="sap-icon://message-information"
+  press="onAbout">
+  </semantic:Button> -->
+        <!-- </semantic:footerMainAction> -->
+    </semantic:SemanticPage>
+
+</mvc:View>
