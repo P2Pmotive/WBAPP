@@ -48,17 +48,13 @@ modules:
     parameters:
       disk-quota: 256M
       memory: 256M
-      routes:
-       - route: 'https://${subdomain}-${space}.${default-domain}'
-
     provides:
       - name: app-api
         properties:
           app-protocol: ${protocol}
           app-uri: ${default-uri}
     properties:
-      TENANT_HOST_PATTERN: '^(.*)-${space}.${default-domain}'
-      # TENANT_HOST_PATTERN: '^(.*)-${default-uri}'
+      TENANT_HOST_PATTERN: '^(.*)-${default-uri}'
 
   - name: WBApp_ui_deployer
     type: com.sap.application.content
@@ -116,6 +112,17 @@ resources:
                 ProxyType: Internet
                 Type: HTTP
                 URL: https://ui5.sap.com
+              - Name: app1-cfapi
+                Description: CF Cloud Controller API
+                URL: ${controller-url}
+                Type: HTTP
+                ProxyType: Internet
+                Authentication: OAuth2Password
+                tokenServiceURL: ${authorization-url}/oauth/token
+                clientId: cf
+                clientSecret:
+                User: <SetValueInCockpit>
+                Password: <SetValueInCockpit>
             existing_destinations_policy: update
         version: 1.0.0
       service: destination
