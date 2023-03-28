@@ -48,10 +48,9 @@ sap.ui.define([
             }
             this._bMessageOpen = true;
             MessageBox.error(
-                this._sErrorText,
+                JSON.parse(sDetails.responseText).error.message.value,
                 {
                     id : "serviceErrorMessageBox",
-                    details : sDetails,
                     styleClass : this._oComponent.getContentDensityClass(),
                     actions : [MessageBox.Action.CLOSE],
                     onClose : function () {

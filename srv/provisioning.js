@@ -9,19 +9,24 @@ xsenv.loadEnv();
 async function getCFInfo(appname) {
     try {
         // get app GUID
+        //console.log("appname",appname);
         let res1 = await httpClient.executeHttpRequest({ destinationName: 'app1-cfapi'}, {
             method: 'GET',
             url: '/v3/apps?organization_guids=' + appEnv.app.organization_id + '&space_guids=' + appEnv.app.space_id + '&names=' + appname
         });
+        //console.log(appEnv.app,"app");
         // get domain GUID
         let res2 = await httpClient.executeHttpRequest({ destinationName: 'app1-cfapi'}, {
             method: 'GET',
             url: '/v3/domains?names=' + /\.(.*)/gm.exec(appEnv.app.application_uris[0])[1]
         });
+        //console.log(res1.data,"res1guid");
+        //console.log(res2.data.resources,"res2");
         let results = {
             'app_id': res1.data.resources[0].guid,
             'domain_id': res2.data.resources[0].guid
         };
+        //console.log(results,"Results");
         return results;
     } catch (err) {
         console.log(err.stack);
@@ -125,7 +130,7 @@ module.exports = (service) => {
         const services = xsenv.getServices({
             registry: { label: 'saas-registry' }
         });
-        createRoute(req.data.subscribedSubdomain, services.registry.appName + '-app').then(
+        createRoute(req.data.subscribedSubdomain, services.registry.xsappName+"-approuter").then(
             function (res2) {
                 return tenantURL;
             },
@@ -142,7 +147,7 @@ module.exports = (service) => {
         const services = xsenv.getServices({
             registry: { label: 'saas-registry' }
         });
-        deleteRoute(req.data.subscribedSubdomain, services.registry.appName + '-app').then(
+        deleteRoute(req.data.subscribedSubdomain, services.registry.xsappName + '-approuter').then(
             async function (res2) {
                 return req.data.subscribedTenantId;
             },

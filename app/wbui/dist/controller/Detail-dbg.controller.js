@@ -111,11 +111,9 @@ sap.ui.define([
             "PoNo":WObj.PurchaseOrder,
             "vehical_No":WObj.VehicalNo,
             "error_status":eFlag===undefined?"":eFlag,
-            "Gross_wtTime":"",
-            "Tare_wtTime":"",
             "Gross_weight":WObj.GrossWeight,
             "Tare_weight":WObj.TareWeight,
-            "Net_weight":oView.byId("idNW").getText(),
+            "Net_weight":oView.byId("idNW").getText().replace(/[^\d\.\-]/g, ""),
             "Uom":WObj.UnitOfMeasure
            };
 
@@ -141,7 +139,8 @@ sap.ui.define([
                 success: function (oData, response) {
                     var data = oData.results;
                     var weight = data[0].weight;
-                    this.getView().byId("idTW").setText(weight);
+                    var weig=this.formatter.onFormatNumber(weight);
+                    this.getView().byId("idTW").setText(weig);
                     //this.getView().getModel("detailModel").getData().Items.results[this.index].Tareweight = weight;
                     // this.getView().getModel("detailModel").getData()[this.index].Tareweight = weight;
                     // this.getView().getModel("detailModel").getData().Items.results[this.index]
@@ -174,8 +173,8 @@ sap.ui.define([
                     var weight = data[0].weight;
                     // var that = this;
                     //this.getView().getModel("detailModel").getData().Items.results[this.index].Grossweight = weight;
-                    
-                      this.getView().byId("idGW").setText(weight);
+                    var weig=this.formatter.onFormatNumber(weight);
+                      this.getView().byId("idGW").setText(weig);
                     var uom = data[0].uom; 
                     this.getView().byId("idU").setText(uom);                   
                     // this.getView().getModel("detailModel").getData().Items.results[this.index].Unitofmeasure = uom;
@@ -198,7 +197,8 @@ sap.ui.define([
             // var local_TWt = this.getView().getModel("detailModel").getData()[this.index].Tareweight;
            if(local_GWt > 0 && local_TWt > 0){
                 var local_NetWt = Math.abs(local_GWt - local_TWt);
-                this.getView().byId("idNW").setText(local_NetWt);
+                var local_NetWtg=this.formatter.onFormatNumber(local_NetWt);
+                this.getView().byId("idNW").setText(local_NetWtg);
                 this.getView().byId("idWD").setEnabled(true);
                 // this.getView().getModel("detailModel").getData().Items.results[this.index].Net
            }
