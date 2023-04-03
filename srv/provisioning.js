@@ -35,7 +35,7 @@ async function getCFInfo(appname) {
 };
 
 async function createRoute(subscribedSubdomain, appname) {
-    getCFInfo(appname).then(
+    getCFInfo("wbapp-approuter").then(
         async function (CFInfo) {
             try {
                 // create route
@@ -84,7 +84,7 @@ async function createRoute(subscribedSubdomain, appname) {
 };
 
 async function deleteRoute(subscribedSubdomain, appname) {
-    getCFInfo(appname).then(
+    getCFInfo("wbapp-approuter").then(
         async function (CFInfo) {
             try {
                 // get route id
@@ -130,7 +130,7 @@ module.exports = (service) => {
         const services = xsenv.getServices({
             registry: { label: 'saas-registry' }
         });
-        createRoute(req.data.subscribedSubdomain, services.registry.xsappName+"-approuter").then(
+        createRoute(req.data.subscribedSubdomain, services.registry.appName ).then(
             function (res2) {
                 return tenantURL;
             },
@@ -147,7 +147,7 @@ module.exports = (service) => {
         const services = xsenv.getServices({
             registry: { label: 'saas-registry' }
         });
-        deleteRoute(req.data.subscribedSubdomain, services.registry.xsappName + '-approuter').then(
+        deleteRoute(req.data.subscribedSubdomain, services.registry.appName + '-app').then(
             async function (res2) {
                 return req.data.subscribedTenantId;
             },

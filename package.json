@@ -1,77 +1,79 @@
 {
-  "name": "WBApp",
-  "version": "1.0.0",
-  "description": "A simple CAP project.",
-  "repository": "<Add your repository here>",
-  "license": "UNLICENSED",
-  "private": true,
-  "dependencies": {
-    "@sap/cds": "^6",
-    "@sap/cds-mtxs": "^1",
-    "express": "^4",
-    "hdb": "^0.19.0",
-    "@sap/cds-odata-v2-adapter-proxy": "^1",
-    "@sap-cloud-sdk/http-client": "^2.5",
-    "@sap/xsenv": "^3.4.0",
-    "@sap/xssec": "^3.2.17",
-    "passport": "^0.6.0",
-    "cfenv": "^1",
-    "debug": "^4.3"
-  },
-  "devDependencies": {
-    "@sap/ux-specification": "^1.108.1",
-    "sqlite3": "^5.0.4",
-    "rimraf": "^3.0.2"
-  },
-  "scripts": {
-    "start": "cds run",
-    "watch-wbui": "cds watch --open wbui/webapp/index.html?sap-ui-xx-viewCache=false",
-    "undeploy": "cf undeploy WBApp --delete-services --delete-service-keys --delete-service-brokers",
-    "build": "rimraf resources mta_archives && mbt build --mtar archive",
-    "deploy": "cf deploy mta_archives/archive.mtar --retries 1"
-  },
-  "engines": {
-    "node": "^16.15"
-  },
-  "eslintConfig": {
-    "extends": "eslint:recommended",
-    "env": {
-      "es2020": true,
-      "node": true,
-      "jest": true,
-      "mocha": true
+    "name": "WBApp",
+    "version": "1.0.0",
+    "description": "A simple CAP project.",
+    "repository": "<Add your repository here>",
+    "license": "UNLICENSED",
+    "private": true,
+    "dependencies": {
+        "@sap-cloud-sdk/http-client": "^2.5",
+        "@sap/cds": "^6",
+        "@sap/cds-mtxs": "^1",
+        "@sap/cds-odata-v2-adapter-proxy": "^1",
+        "@sap/xsenv": "^3.4.0",
+        "@sap/xssec": "^3.2.17",
+        "cfenv": "^1",
+        "debug": "^4.3",
+        "express": "^4",
+        "hdb": "^0.19.0",
+        "passport": "^0.6.0"
     },
-    "globals": {
-      "SELECT": true,
-      "INSERT": true,
-      "UPDATE": true,
-      "DELETE": true,
-      "CREATE": true,
-      "DROP": true,
-      "CDL": true,
-      "CQL": true,
-      "CXL": true,
-      "cds": true
+    "devDependencies": {
+        "@sap/ux-specification": "^1.108.2",
+        "rimraf": "^3.0.2",
+        "sqlite3": "^5.0.4"
     },
-    "rules": {
-      "no-console": "off",
-      "require-atomic-updates": "off"
-    }
-  },
-  "cds": {
-    "requires": {
-      "db": {
-        "kind": "hana-mt"
-      },
-      "[production]": {
-        "multitenancy": true,
-        "db": {
-          "kind": "hana-mt"
+    "scripts": {
+        "start": "cds run",
+        "watch-wbui": "cds watch --open wbui/webapp/index.html?sap-ui-xx-viewCache=false",
+        "undeploy": "cf undeploy WBApp --delete-services --delete-service-keys --delete-service-brokers",
+        "build": "rimraf resources mta_archives && mbt build --mtar archive",
+        "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+        "watch-wbsync": "cds watch --open wbsync/webapp/index.html?sap-ui-xx-viewCache=false"
+    },
+    "engines": {
+        "node": "^16.15"
+    },
+    "eslintConfig": {
+        "extends": "eslint:recommended",
+        "env": {
+            "es2020": true,
+            "node": true,
+            "jest": true,
+            "mocha": true
+        },
+        "globals": {
+            "SELECT": true,
+            "INSERT": true,
+            "UPDATE": true,
+            "DELETE": true,
+            "CREATE": true,
+            "DROP": true,
+            "CDL": true,
+            "CQL": true,
+            "CXL": true,
+            "cds": true
+        },
+        "rules": {
+            "no-console": "off",
+            "require-atomic-updates": "off"
         }
-      }
-    }
-  },
-  "sapux": [
-    "app/wbui"
-  ]
+    },
+    "cds": {
+        "requires": {
+            "db": {
+                "kind": "hana-mt"
+            },
+            "[production]": {
+                "multitenancy": true,
+                "db": {
+                    "kind": "hana-mt"
+                }
+            }
+        }
+    },
+    "sapux": [
+        "app/wbui",
+        "app/wbsync"
+    ]
 }

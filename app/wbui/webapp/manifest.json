@@ -42,7 +42,19 @@
           "odataVersion": "2.0"
       }
   }
-    }
+    },
+    "crossNavigation": {
+      "inbounds": {
+          "WBridge-manage": {
+              "signature": {
+                  "parameters": {},
+                  "additionalParameters": "allowed"
+              },
+              "semanticObject": "WBridge",
+              "action": "manage"
+          }
+      }
+  }
   },
   "sap.ui": {
     "technology": "UI5",

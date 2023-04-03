@@ -1,5 +1,29 @@
 {
-  "authenticationMethod": "none",
-  "routes": [],
-  "welcomeFile": "/wbui"
+  "authenticationMethod": "route",
+  "routes": [
+        {
+          "source": "^/resources/(.*)$",
+          "target": "/$1",
+          "localDir": "resources",
+          "authenticationType": "xsuaa"
+        },
+        {
+          "source": "^/appconfig/(.*)$",
+          "target": "/appconfig/$1",
+          "localDir": "resources",
+          "authenticationType": "xsuaa"
+        },{
+        "source": "^/wbui/(.*)$",
+        "target": "/wbui/$1",
+        "service": "html5-apps-repo-rt",
+        "authenticationType": "xsuaa"
+      },
+      {
+        "source": "^/wbsync/(.*)$",
+        "target": "/wbsync/$1",
+        "service": "html5-apps-repo-rt",
+        "authenticationType": "xsuaa"
+      }
+  ],
+  "welcomeFile": "/resources/index.html"
 }

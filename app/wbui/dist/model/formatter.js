@@ -1,1 +1,1 @@
-sap.ui.define([],function(){"use strict";return{currencyValue:function(e){if(!e){return""}return parseFloat(e).toFixed(2)}}});
+sap.ui.define(["sap/ui/core/format/NumberFormat"],function(t){"use strict";return{currencyValue:function(t){if(!t){return""}return parseFloat(t).toFixed(2)},onFormatNumber:function(r){var e=t.getFloatInstance({maxFractionDigits:2,minFractionDigits:2,groupingEnabled:true},sap.ui.getCore().getConfiguration().getLocale());return e.format(r)}}});
